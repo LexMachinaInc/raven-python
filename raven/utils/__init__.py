@@ -9,6 +9,7 @@ raven.utils
 import hashlib
 import hmac
 import logging
+import collections
 try:
     import pkg_resources
 except ImportError:
@@ -31,7 +32,7 @@ def varmap(func, var, context=None, name=None):
         return func(name, '<...>')
     context[objid] = 1
     if isinstance(var, dict):
-        ret = dict((k, varmap(func, v, context, k)) for k, v in var.iteritems())
+        ret = dict((k, varmap(func, v, context, k)) for k, v in var.items())
     elif isinstance(var, (list, tuple)):
         ret = [varmap(func, f, context, name) for f in var]
     else:
@@ -47,7 +48,7 @@ _VERSION_CACHE = {}
 def get_version_from_app(module_name, app):
     if hasattr(app, 'get_version'):
         get_version = app.get_version
-        if callable(get_version):
+        if isinstance(get_version, collections.Callable):
             version = get_version()
         else:
             version = get_version
@@ -77,7 +78,7 @@ def get_versions(module_list=None):
     ext_module_list = set()
     for m in module_list:
         parts = m.split('.')
-        ext_module_list.update('.'.join(parts[:idx]) for idx in xrange(1, len(parts) + 1))
+        ext_module_list.update('.'.join(parts[:idx]) for idx in range(1, len(parts) + 1))
 
     versions = {}
     for module_name in ext_module_list:
@@ -94,7 +95,7 @@ def get_versions(module_list=None):
 
             try:
                 version = get_version_from_app(module_name, app)
-            except Exception, e:
+            except Exception as e:
                 logger.exception(e)
                 version = None
 

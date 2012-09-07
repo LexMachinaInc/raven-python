@@ -1,10 +1,10 @@
-import urlparse
+import urllib.parse
 
 from raven.utils.wsgi import get_headers, get_environ
 
 
 def get_data_from_request(request):
-    urlparts = urlparse.urlsplit(request.url)
+    urlparts = urllib.parse.urlsplit(request.url)
 
     return {
         'sentry.interfaces.Http': {

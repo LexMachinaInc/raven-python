@@ -1,4 +1,4 @@
-from __future__ import with_statement
+
 import logging
 import sys
 from unittest2 import TestCase
@@ -58,10 +58,10 @@ class MiddlewareTest(TestCase):
         self.assertEquals(http['method'], 'GET')
         # self.assertEquals(http['data'], {'foo': 'bar'})
         headers = http['headers']
-        self.assertTrue('Host' in headers, headers.keys())
+        self.assertTrue('Host' in headers, list(headers.keys()))
         self.assertEquals(headers['Host'], 'localhost:80')
         env = http['env']
-        self.assertTrue('SERVER_NAME' in env, env.keys())
+        self.assertTrue('SERVER_NAME' in env, list(env.keys()))
         self.assertEquals(env['SERVER_NAME'], 'localhost')
-        self.assertTrue('SERVER_PORT' in env, env.keys())
+        self.assertTrue('SERVER_PORT' in env, list(env.keys()))
         self.assertEquals(env['SERVER_PORT'], '80')

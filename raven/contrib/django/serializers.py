@@ -33,7 +33,7 @@ class PromiseSerializer(Serializer):
         if hasattr(value, '%s__func' % pre):
             value = getattr(value, '%s__func' % pre)(*getattr(value, '%s__args' % pre), **getattr(value, '%s__kw' % pre))
         else:
-            return unicode(value)
+            return str(value)
         return self.recurse(value)
 
 
@@ -43,8 +43,8 @@ class QuerySetSerializer(Serializer):
     def serialize(self, value):
         qs_name = type(value).__name__
         if value.model:
-            return u'<%s: model=%s>' % (qs_name, value.model.__name__)
-        return u'<%s: (Unbound)>' % (qs_name,)
+            return '<%s: model=%s>' % (qs_name, value.model.__name__)
+        return '<%s: (Unbound)>' % (qs_name,)
 
 
 register(PromiseSerializer)

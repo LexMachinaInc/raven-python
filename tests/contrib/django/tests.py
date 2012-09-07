@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import
-from __future__ import with_statement
+
+
 
 import datetime
 import django
@@ -9,7 +9,7 @@ import logging
 import mock
 import re
 from celery.tests.utils import with_eager_tasks
-from StringIO import StringIO
+from io import StringIO
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -73,12 +73,12 @@ class Settings(object):
         self._orig = {}
 
     def __enter__(self):
-        for k, v in self.overrides.iteritems():
+        for k, v in self.overrides.items():
             self._orig[k] = getattr(settings, k, self.NotDefined)
             setattr(settings, k, v)
 
     def __exit__(self, exc_type, exc_value, traceback):
-        for k, v in self._orig.iteritems():
+        for k, v in self._orig.items():
             if v is self.NotDefined:
                 delattr(settings, k)
             else:
@@ -126,9 +126,9 @@ class DjangoClientTest(TestCase):
         self.assertTrue('sentry.interfaces.Exception' in event)
         exc = event['sentry.interfaces.Exception']
         self.assertEquals(exc['type'], 'ValueError')
-        self.assertEquals(exc['value'], u"invalid literal for int() with base 10: 'hello'")
+        self.assertEquals(exc['value'], "invalid literal for int() with base 10: 'hello'")
         self.assertEquals(event['level'], logging.ERROR)
-        self.assertEquals(event['message'], u"ValueError: invalid literal for int() with base 10: 'hello'")
+        self.assertEquals(event['message'], "ValueError: invalid literal for int() with base 10: 'hello'")
         self.assertEquals(event['culprit'], 'tests.contrib.django.tests.test_signal_integration')
 
     def test_view_exception(self):
@@ -325,7 +325,7 @@ class DjangoClientTest(TestCase):
 
             self.assertTrue('sentry.interfaces.Http' in event)
             http = event['sentry.interfaces.Http']
-            self.assertEquals(http['url'], u'http://testserver/non-existant-page')
+            self.assertEquals(http['url'], 'http://testserver/non-existant-page')
             self.assertEquals(http['method'], 'GET')
             self.assertEquals(http['query_string'], '')
             self.assertEquals(http['data'], None)
@@ -335,7 +335,7 @@ class DjangoClientTest(TestCase):
         with Settings(MIDDLEWARE_CLASSES=['raven.contrib.django.middleware.SentryResponseErrorIdMiddleware', 'raven.contrib.django.middleware.Sentry404CatchMiddleware']):
             resp = self.client.get('/non-existant-page')
             self.assertEquals(resp.status_code, 404)
-            headers = dict(resp.items())
+            headers = dict(list(resp.items()))
             self.assertTrue('X-Sentry-ID' in headers)
             self.assertEquals(len(self.raven.events), 1)
             event = self.raven.events.pop(0)
@@ -400,12 +400,12 @@ class DjangoClientTest(TestCase):
         self.assertEquals(http['data'], '<unavailable>')
         self.assertTrue('headers' in http)
         headers = http['headers']
-        self.assertTrue('Content-Type' in headers, headers.keys())
+        self.assertTrue('Content-Type' in headers, list(headers.keys()))
         self.assertEquals(headers['Content-Type'], 'text/html')
         env = http['env']
-        self.assertTrue('SERVER_NAME' in env, env.keys())
+        self.assertTrue('SERVER_NAME' in env, list(env.keys()))
         self.assertEquals(env['SERVER_NAME'], 'testserver')
-        self.assertTrue('SERVER_PORT' in env, env.keys())
+        self.assertTrue('SERVER_PORT' in env, list(env.keys()))
         self.assertEquals(env['SERVER_PORT'], '80')
 
     def test_filtering_middleware(self):
@@ -610,13 +610,13 @@ class PromiseSerializerTestCase(TestCase):
         from django.utils.functional import lazy
 
         def fake_gettext(to_translate):
-            return u'Igpay Atinlay'
+            return 'Igpay Atinlay'
 
         fake_gettext_lazy = lazy(fake_gettext, str)
 
         result = transform(fake_gettext_lazy("something"))
-        self.assertTrue(isinstance(result, basestring))
-        self.assertEquals(result, u'Igpay Atinlay')
+        self.assertTrue(isinstance(result, str))
+        self.assertEquals(result, 'Igpay Atinlay')
 
 
 class QuerySetSerializerTestCase(TestCase):
@@ -624,13 +624,13 @@ class QuerySetSerializerTestCase(TestCase):
         instance = TestModel()
 
         result = transform(instance)
-        self.assertTrue(isinstance(result, basestring))
-        self.assertEquals(result, u'<TestModel: TestModel object>')
+        self.assertTrue(isinstance(result, str))
+        self.assertEquals(result, '<TestModel: TestModel object>')
 
     def test_basic(self):
         from django.db.models.query import QuerySet
         obj = QuerySet(model=TestModel)
 
         result = transform(obj)
-        self.assertTrue(isinstance(result, basestring))
-        self.assertEquals(result, u'<QuerySet: model=TestModel>')
+        self.assertTrue(isinstance(result, str))
+        self.assertEquals(result, '<QuerySet: model=TestModel>')

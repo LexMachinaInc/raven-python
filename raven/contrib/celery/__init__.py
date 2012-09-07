@@ -55,7 +55,7 @@ def register_signal(client):
         import logging
         logger = logging.getLogger()
         handler = SentryHandler(client)
-        if handler.__class__ in map(type, logger.handlers):
+        if handler.__class__ in list(map(type, logger.handlers)):
             return False
         handler.setLevel(logging.ERROR)
         handler.addFilter(CeleryFilter())

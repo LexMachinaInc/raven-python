@@ -10,13 +10,14 @@ from raven.utils.encoding import to_string, to_unicode
 from raven.utils.serializer.manager import register
 from types import ClassType, TypeType
 from uuid import UUID
+import collections
 
 __all__ = ('Serializer',)
 
 
 def has_sentry_metadata(value):
     try:
-        return callable(value.__getattribute__('__sentry__'))
+        return isinstance(value.__getattribute__('__sentry__'), collections.Callable)
     except:
         return False
 
@@ -72,11 +73,11 @@ class DictSerializer(Serializer):
     types = (dict,)
 
     def serialize(self, value):
-        return dict((to_string(k), self.recurse(v)) for k, v in value.iteritems())
+        return dict((to_string(k), self.recurse(v)) for k, v in value.items())
 
 
 class UnicodeSerializer(Serializer):
-    types = (unicode,)
+    types = (str,)
 
     def serialize(self, value):
         return to_unicode(value)
@@ -121,10 +122,10 @@ class IntegerSerializer(Serializer):
 
 
 class LongSerializer(Serializer):
-    types = (long,)
+    types = (int,)
 
     def serialize(self, value):
-        return long(value)
+        return int(value)
 
 
 register(IterableSerializer)

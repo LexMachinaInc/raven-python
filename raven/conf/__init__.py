@@ -72,7 +72,7 @@ def setup_logging(handler, exclude=['raven',
     Returns a boolean based on if logging was configured or not.
     """
     logger = logging.getLogger()
-    if handler.__class__ in map(type, logger.handlers):
+    if handler.__class__ in list(map(type, logger.handlers)):
         return False
 
     logger.addHandler(handler)

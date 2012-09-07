@@ -6,7 +6,7 @@ raven.contrib.django.client
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 import logging
 
@@ -118,7 +118,7 @@ class DjangoClient(Client):
         elif 'sentry' in settings.INSTALLED_APPS:
             try:
                 return self.send_integrated(kwargs)
-            except Exception, e:
+            except Exception as e:
                 self.error_logger.error('Unable to record event: %s', e, exc_info=True)
 
     def send_integrated(self, kwargs):

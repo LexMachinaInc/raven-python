@@ -6,7 +6,7 @@ raven.contrib.django.middleware
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 from django.middleware.common import _is_ignorable_404
 from raven.contrib.django.models import client

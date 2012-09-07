@@ -8,7 +8,7 @@ Acts as an implicit hook for Django installs.
 :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import absolute_import
+
 
 import sys
 import logging
@@ -86,10 +86,10 @@ class ProxyClient(object):
     __invert__ = lambda x: ~(get_client())
     __complex__ = lambda x: complex(get_client())
     __int__ = lambda x: int(get_client())
-    __long__ = lambda x: long(get_client())
+    __long__ = lambda x: int(get_client())
     __float__ = lambda x: float(get_client())
     __str__ = lambda x: str(get_client())
-    __unicode__ = lambda x: unicode(get_client())
+    __unicode__ = lambda x: str(get_client())
     __oct__ = lambda x: oct(get_client())
     __hex__ = lambda x: hex(get_client())
     __index__ = lambda x: get_client().__index__()
@@ -170,15 +170,15 @@ def sentry_exception_handler(request=None, **kwargs):
                 transaction.rollback()
 
             get_client().capture('Exception', exc_info=exc_info, request=request)
-        except Exception, exc:
+        except Exception as exc:
             try:
-                logger.exception(u'Unable to process log entry: %s' % (exc,))
-            except Exception, exc:
-                warnings.warn(u'Unable to process log entry: %s' % (exc,))
+                logger.exception('Unable to process log entry: %s' % (exc,))
+            except Exception as exc:
+                warnings.warn('Unable to process log entry: %s' % (exc,))
         finally:
             try:
                 del exc_info
-            except Exception, e:
+            except Exception as e:
                 logger.exception(e)
 
     return actually_do_stuff(request, **kwargs)
@@ -196,7 +196,7 @@ def register_handlers():
 
         try:
             register_signal(client)
-        except Exception, e:
+        except Exception as e:
             logger.exception('Failed installing django-celery hook: %s' % e)
 
 

@@ -6,7 +6,7 @@ raven.contrib.django.views
 :license: BSD, see LICENSE for more details.
 """
 
-import simplejson
+import json
 
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
@@ -29,7 +29,7 @@ def is_valid_origin(origin):
 
     origin = origin.lower()
     for value in settings.SENTRY_ALLOW_ORIGIN:
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             if value.lower() == origin:
                 return True
         else:
@@ -79,8 +79,8 @@ def report(request, project_id=None):
             return HttpResponseBadRequest()
 
         try:
-            decoded = simplejson.loads(data)
-        except simplejson.JSONDecodeError:
+            decoded = json.loads(data)
+        except json.JSONDecodeError:
             return HttpResponseBadRequest()
 
         response = HttpResponse()

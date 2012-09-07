@@ -41,7 +41,6 @@ tests_require = [
 ]
 
 install_requires = [
-    'simplejson',
 ]
 
 setup(

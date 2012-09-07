@@ -1,9 +1,9 @@
-from __future__ import absolute_import
-import urlparse as _urlparse
+
+import urllib.parse as _urlparse
 
 
 def register_scheme(scheme):
-    for method in filter(lambda s: s.startswith('uses_'), dir(_urlparse)):
+    for method in [s for s in dir(_urlparse) if s.startswith('uses_')]:
         uses = getattr(_urlparse, method)
         if scheme not in uses:
             uses.append(scheme)

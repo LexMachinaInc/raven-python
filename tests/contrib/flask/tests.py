@@ -66,16 +66,16 @@ class FlaskTest(TestCase):
         self.assertEquals(http['data'], {})
         self.assertTrue('headers' in http)
         headers = http['headers']
-        self.assertTrue('Content-Length' in headers, headers.keys())
+        self.assertTrue('Content-Length' in headers, list(headers.keys()))
         self.assertEquals(headers['Content-Length'], '0')
-        self.assertTrue('Content-Type' in headers, headers.keys())
+        self.assertTrue('Content-Type' in headers, list(headers.keys()))
         self.assertEquals(headers['Content-Type'], '')
-        self.assertTrue('Host' in headers, headers.keys())
+        self.assertTrue('Host' in headers, list(headers.keys()))
         self.assertEquals(headers['Host'], 'localhost')
         env = http['env']
-        self.assertTrue('SERVER_NAME' in env, env.keys())
+        self.assertTrue('SERVER_NAME' in env, list(env.keys()))
         self.assertEquals(env['SERVER_NAME'], 'localhost')
-        self.assertTrue('SERVER_PORT' in env, env.keys())
+        self.assertTrue('SERVER_PORT' in env, list(env.keys()))
         self.assertEquals(env['SERVER_PORT'], '80')
 
     def test_post(self):
@@ -95,14 +95,14 @@ class FlaskTest(TestCase):
         self.assertEquals(http['data'], {'foo': 'bar'})
         self.assertTrue('headers' in http)
         headers = http['headers']
-        self.assertTrue('Content-Length' in headers, headers.keys())
+        self.assertTrue('Content-Length' in headers, list(headers.keys()))
         self.assertEquals(headers['Content-Length'], '7')
-        self.assertTrue('Content-Type' in headers, headers.keys())
+        self.assertTrue('Content-Type' in headers, list(headers.keys()))
         self.assertEquals(headers['Content-Type'], 'application/x-www-form-urlencoded')
-        self.assertTrue('Host' in headers, headers.keys())
+        self.assertTrue('Host' in headers, list(headers.keys()))
         self.assertEquals(headers['Host'], 'localhost')
         env = http['env']
-        self.assertTrue('SERVER_NAME' in env, env.keys())
+        self.assertTrue('SERVER_NAME' in env, list(env.keys()))
         self.assertEquals(env['SERVER_NAME'], 'localhost')
-        self.assertTrue('SERVER_PORT' in env, env.keys())
+        self.assertTrue('SERVER_PORT' in env, list(env.keys()))
         self.assertEquals(env['SERVER_PORT'], '80')

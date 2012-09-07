@@ -20,7 +20,7 @@ class TransformTest(TestCase):
         x = 'רונית מגן'.decode('utf-8')
 
         result = transform(x)
-        self.assertEquals(type(result), unicode)
+        self.assertEquals(type(result), str)
         self.assertEquals(result, x)
 
     def test_bad_string(self):
@@ -55,11 +55,11 @@ class TransformTest(TestCase):
     #     self.assertEquals(result, '(Error decoding value)')
 
     def test_dict_keys(self):
-        x = {u'foo': 'bar'}
+        x = {'foo': 'bar'}
 
         result = transform(x)
         self.assertEquals(type(result), dict)
-        keys = result.keys()
+        keys = list(result.keys())
         self.assertEquals(len(keys), 1)
         self.assertTrue(type(keys[0]), str)
         self.assertEquals(keys[0], 'foo')
@@ -69,16 +69,16 @@ class TransformTest(TestCase):
 
         result = transform(x)
         self.assertEquals(type(result), dict)
-        keys = result.keys()
+        keys = list(result.keys())
         self.assertEquals(len(keys), 1)
         self.assertTrue(type(keys[0]), str)
         self.assertEquals(keys[0], 'רונית מגן')
 
     def test_dict_keys_utf8_as_unicode(self):
-        x = {u'רונית מגן': 'bar'}
+        x = {'רונית מגן': 'bar'}
 
         result = transform(x)
-        keys = result.keys()
+        keys = list(result.keys())
         self.assertEquals(len(keys), 1)
         self.assertTrue(type(keys[0]), str)
         self.assertEquals(keys[0], 'רונית מגן')
@@ -114,7 +114,7 @@ class TransformTest(TestCase):
         x = Foo()
 
         result = transform(x)
-        self.assertEquals(result, u"<BadRepr: <class 'tests.utils.encoding.tests.Foo'>>")
+        self.assertEquals(result, "<BadRepr: <class 'tests.utils.encoding.tests.Foo'>>")
 
 
 class ShortenTest(TestCase):
@@ -124,7 +124,7 @@ class ShortenTest(TestCase):
         self.assertEquals(result, 'hello...')
 
     def test_shorten_lists(self):
-        result = shorten(range(500), list_length=50)
+        result = shorten(list(range(500)), list_length=50)
         self.assertEquals(len(result), 52)
         self.assertEquals(result[-2], '...')
         self.assertEquals(result[-1], '(450 more elements)')
@@ -136,7 +136,7 @@ class ShortenTest(TestCase):
         self.assertEquals(result[-1], '(450 more elements)')
 
     def test_shorten_frozenset(self):
-        result = shorten(frozenset(range(500)), list_length=50)
+        result = shorten(frozenset(list(range(500))), list_length=50)
         self.assertEquals(len(result), 52)
         self.assertEquals(result[-2], '...')
         self.assertEquals(result[-1], '(450 more elements)')

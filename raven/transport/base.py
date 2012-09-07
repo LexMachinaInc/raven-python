@@ -8,7 +8,7 @@ raven.transport.builtins
 
 import logging
 import sys
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from socket import socket, AF_INET, SOCK_DGRAM, error as socket_error
 
 try:
@@ -136,12 +136,12 @@ class HTTPTransport(Transport):
         """
         Sends a request to a remote webserver using HTTP POST.
         """
-        req = urllib2.Request(self._url, headers=headers)
+        req = urllib.request.Request(self._url, headers=headers)
 
         if sys.version_info < (2, 6):
-            response = urllib2.urlopen(req, data).read()
+            response = urllib.request.urlopen(req, data).read()
         else:
-            response = urllib2.urlopen(req, data, self.timeout).read()
+            response = urllib.request.urlopen(req, data, self.timeout).read()
         return response
 
     def compute_scope(self, url, scope):
